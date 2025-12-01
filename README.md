@@ -41,8 +41,12 @@ The refactoring pipeline consists of 5 specialized agents working in sequence:
 1. **ReviewerAgent**: Analyzes code for OOP violations and best practice issues
 2. **InitialWriterAgent**: Generates refactored code based on review feedback
 3. **ValidationLoop**: (LoopAgent with max 3 iterations)
-   - **ValidatorAgent**: Validates syntax using Pharo eval
-   - **RefinerAgent**: Fixes syntax errors or exits loop when valid
+   - **ValidatorAgent**: Senior Pharo engineer reviewing code quality with strict standards
+     - Reviews naming conventions (rejects generic names like a, b, temp)
+     - Enforces OOP principles (SRP, Encapsulation, Polymorphism)
+     - Checks Smalltalk idioms (Tell Don't Ask, proper message sending)
+     - Validates code quality, clarity, and maintainability
+   - **RefinerAgent**: Addresses review feedback and improves code quality
 4. **ReleaseAgent**: Compiles validated code to Pharo image
 
 ## ⚠️ Important: Concurrency Control

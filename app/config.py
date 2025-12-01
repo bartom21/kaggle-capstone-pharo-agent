@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     pharo_mcp_server_command: str = "uv"
     pharo_mcp_server_args: List[str] = ["run", "pharo-smalltalk-interop-mcp-server"]
     pharo_mcp_server_cwd: str = ""  # Path to pharo-smalltalk-interop-mcp-server
-    pharo_mcp_timeout: int = 30
+    pharo_mcp_timeout: int = 1200
 
     # Agent Configuration
     max_validation_iterations: int = 3

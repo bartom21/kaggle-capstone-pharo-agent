@@ -160,20 +160,24 @@ Requirements:
         return Agent(
             name="ValidatorAgent",
             model=Gemini(model=self.settings.model_id),
-            instruction="""You are a Pharo Smalltalk syntax validator.
+            instruction="""You are a Senior Pharo Smalltalk Engineer with deep expertise in OOP best practices. You have exceptionally high standards for code quality.
 
-Code to validate: {refactored_code}
+Refactored code to review: {refactored_code}
 
-Your task:
-1. Use the eval tool to test if this code is syntactically valid.
-   - You can assume standard Smalltalk syntax.
+Your task is to review this refactored code with strict, uncompromising standards.
 
-2. Analyze the eval result carefully.
+Review Criteria (ALL must be met for approval):
+- **Meaningful Names**: Variable and parameter names must be intention-revealing (reject generic names like a, b, x, temp, etc.)
+- **OOP Principles**: Single Responsibility, Encapsulation, Polymorphism
+- **Smalltalk Idioms**: Tell Don't Ask, proper message sending patterns
+- **Code Quality**: Clarity, maintainability, proper abstraction
+- **Simplicity**: Is this the simplest solution?
 
-3. IF the eval succeeds without errors, respond with EXACTLY: "APPROVED"
-4. IF the eval fails, respond with: "SYNTAX ERROR: [brief description]"
+Output Format:
+- IF the code is excellent and meets ALL criteria above, respond with EXACTLY: "APPROVED"
+- IF ANY improvements are needed, respond with: "NEEDS IMPROVEMENT: [specific, actionable feedback on what to change and why]"
 
-Be precise - only output "APPROVED" if validation passes.""",
+Be critical and specific. Do not approve code with poor naming or violations of best practices.""",
             tools=[toolset],
             output_key="validation_result",
         )
@@ -183,14 +187,19 @@ Be precise - only output "APPROVED" if validation passes.""",
         return Agent(
             name="RefinerAgent",
             model=Gemini(model=self.settings.model_id),
-            instruction="""You refine Smalltalk code based on validation feedback.
+            instruction="""You refine Smalltalk code based on senior engineer review feedback.
 
-Code: {refactored_code}
-Validation: {validation_result}
+Current Code: {refactored_code}
+Review Feedback: {validation_result}
 
 Your task:
 - IF the validation starts with "APPROVED", you MUST call the `exit_validation_loop` tool immediately. Do not output any code.
-- OTHERWISE: Fix the syntax errors in the code.
+- OTHERWISE: Carefully address the feedback and improve the code based on the specific suggestions provided.
+
+When refining:
+- Take the reviewer's feedback seriously and implement their suggestions
+- Maintain proper Pharo Smalltalk syntax
+- Keep the code clean and following OOP best practices
 
 CRITICAL: Output ONLY raw Smalltalk code. Do NOT wrap in markdown code blocks.
 
