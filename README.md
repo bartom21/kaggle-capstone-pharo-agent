@@ -1,6 +1,8 @@
-# Pharo Reviewer Agent API
+# Ailan: The Pharo Smalltalk Agent
 
 > **Google + Kaggle Agentic AI Course - Capstone Project**
+
+**Ailan** combines "AI" and "Alan"—honoring **Alan Kay**, the visionary creator of Smalltalk. Just as Kay pioneered object-oriented programming and dynamic environments, Ailan brings the power of modern AI agents to the Smalltalk ecosystem.
 
 ## The Problem: Legacy Systems Left Behind in the AI Revolution
 
