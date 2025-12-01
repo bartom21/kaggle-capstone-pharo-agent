@@ -96,14 +96,80 @@ app/
 
 The refactoring pipeline consists of 5 specialized agents working in sequence:
 
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     AGENTIC SYSTEM FLOW                         │
+└─────────────────────────────────────────────────────────────────┘
+
+Input: { class_name, method_name }
+   │
+   ▼
+┌──────────────────────────────────────────────────────────────┐
+│  1. REVIEWER AGENT                                           │
+│  Role: Senior code reviewer                                  │
+│  • Retrieves method from Pharo via MCP tools                 │
+│  • Analyzes OOP violations (SRP, Encapsulation, etc.)        │
+│  • Identifies best practice issues                           │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+                         ▼ Output: { code_review }
+┌──────────────────────────────────────────────────────────────┐
+│  2. INITIAL WRITER AGENT                                     │
+│  Role: Code generator                                        │
+│  • Reads review feedback                                     │
+│  • Generates refactored Smalltalk code                       │
+│  • Addresses all identified issues                           │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+                         ▼ Output: { refactored_code }
+┌──────────────────────────────────────────────────────────────┐
+│  3. VALIDATION LOOP (max 3 iterations)                       │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  3a. VALIDATOR AGENT                                   │ │
+│  │  Role: Senior Pharo engineer (strict standards)        │ │
+│  │  • Reviews naming conventions                          │ │
+│  │  • Enforces OOP principles                             │ │
+│  │  • Checks Smalltalk idioms (Tell Don't Ask)            │ │
+│  │  • Validates code quality & maintainability            │ │
+│  └──────────────────┬─────────────────────────────────────┘ │
+│                     │                                        │
+│                     ▼ Output: { validation_result }          │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  3b. REFINER AGENT                                     │ │
+│  │  Role: Code improver                                   │ │
+│  │  • If APPROVED → exit_validation_loop()                │ │
+│  │  • If NEEDS IMPROVEMENT → refine code → iterate       │ │
+│  └──────────────────┬─────────────────────────────────────┘ │
+│                     │                                        │
+│                     └──────┐ Loop until approved             │
+│                            │ or max iterations               │
+└────────────────────────────┼────────────────────────────────┘
+                             │
+                             ▼ Final: { refactored_code, validation_result }
+┌──────────────────────────────────────────────────────────────┐
+│  4. RELEASE AGENT                                            │
+│  Role: Code deployer                                         │
+│  • Compiles code into Pharo image via MCP tools              │
+│  • Updates method in live environment                        │
+│  • Handles compilation errors                               │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+                         ▼
+Final Output: {
+  code_review,
+  refactored_code,
+  validation_result,
+  release_status
+}
+```
+
+### Agent Roles Summary
+
 1. **ReviewerAgent**: Analyzes code for OOP violations and best practice issues
 2. **InitialWriterAgent**: Generates refactored code based on review feedback
 3. **ValidationLoop**: (LoopAgent with max 3 iterations)
    - **ValidatorAgent**: Senior Pharo engineer reviewing code quality with strict standards
-     - Reviews naming conventions (rejects generic names like a, b, temp)
-     - Enforces OOP principles (SRP, Encapsulation, Polymorphism)
-     - Checks Smalltalk idioms (Tell Don't Ask, proper message sending)
-     - Validates code quality, clarity, and maintainability
    - **RefinerAgent**: Addresses review feedback and improves code quality
 4. **ReleaseAgent**: Compiles validated code to Pharo image
 
