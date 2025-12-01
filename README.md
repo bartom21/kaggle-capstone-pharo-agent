@@ -1,5 +1,57 @@
 # Pharo Reviewer Agent API
 
+> **Google + Kaggle Agentic AI Course - Capstone Project**
+
+## The Problem: Legacy Systems Left Behind in the AI Revolution
+
+Modern developers working with languages like Python, JavaScript, or TypeScript enjoy integrated AI assistants—Cursor, Windsurf, GitHub Copilot—that dramatically boost productivity. These tools don't just autocomplete; they refactor, generate tests, and even deploy code. Meanwhile, **legacy system developers are stuck in the past**, working without any AI assistance in their IDEs.
+
+This productivity gap is real and growing. Teams maintaining legacy systems are becoming less productive relative to their modern counterparts, and engineers on these teams risk being left behind professionally as the AI revolution accelerates.
+
+### A Real-World Problem
+
+I face this issue firsthand as a Smalltalk developer at **JPMorgan Chase**, working on **Kapital**—a trade and risk financial management system built on VisualWorks Smalltalk. While my teammates supporting other applications leverage agentic AI capabilities daily, my team has zero AI integration. We can't use AI tools simply because our environment doesn't support them.
+
+This isn't a niche problem. Countless enterprises still run critical systems on Smalltalk, COBOL, and other legacy platforms. The companies depend on these systems, but the developers maintaining them are starved of the tools that define modern software engineering.
+
+## The Solution: Bringing Agentic AI to Legacy Environments
+
+This project **bridges the gap** by embedding agentic AI capabilities directly into the Smalltalk environment. Instead of hoping legacy IDEs will eventually support AI (they won't), we bring AI to where the developers work.
+
+### Why Agents?
+
+Simple autocomplete isn't enough for legacy codebases—you need context-aware systems that can:
+- **Understand domain-specific patterns** (e.g., Smalltalk's message-passing paradigms)
+- **Perform multi-step workflows** (review → refactor → validate → deploy)
+- **Integrate seamlessly** with existing development workflows
+- **Ensure quality** through validation loops before releasing changes
+
+Agentic systems excel at exactly this: orchestrating specialized AI agents to tackle complex, multi-step tasks autonomously.
+
+### The Core Innovation
+
+This project integrates an **agentic refactoring system** directly into **Pharo Smalltalk** via a menu tool. Developers can:
+
+1. Right-click a method in Pharo
+2. Request a refactor from the agentic system
+3. The multi-agent pipeline reviews, refactors, validates, and pushes code directly into the Pharo image
+
+No context switching. No manual copying. The AI works **inside** the legacy environment.
+
+This was made possible by building on the [Pharo Smalltalk Interop MCP Server](https://github.com/mumez/pharo-smalltalk-interop-mcp-server) by mumez, which enables communication between the agentic system and the Pharo environment.
+
+### Impact
+
+By bringing agentic capabilities to Smalltalk, this project:
+- **Levels the playing field** for legacy developers
+- **Increases productivity** in maintaining critical enterprise systems
+- **Demonstrates a blueprint** for integrating AI into other legacy environments
+- **Preserves career viability** for developers in legacy ecosystems
+
+---
+
+## Technical Overview
+
 A production-ready FastAPI application that provides AI-powered code review and refactoring for Pharo Smalltalk methods using Google's ADK multi-agent system.
 
 ## Features
@@ -69,32 +121,221 @@ async with self._lock:
     result = await agent_service.refactor_method(...)
 ```
 
-## Setup
+## How to Reproduce This Project
+
+This guide walks you through setting up the complete agentic refactoring system from scratch.
 
 ### Prerequisites
 
-1. **Pharo Smalltalk** with PharoSmalltalkInteropServer running on port 8086
-2. **Python 3.8+**
-3. **Google AI API Key**
+- **Pharo Smalltalk** (version 11 or later recommended)
+- **Python 3.8+**
+- **Node.js and npm** (for running the MCP server)
+- **Google AI API Key** ([Get one here](https://aistudio.google.com/apikey))
+- **Git**
 
-### Installation
+---
 
-1. Clone this repository
-2. Install dependencies:
+### Step 1: Set Up Pharo Smalltalk Interop Server
+
+The Pharo Interop Server exposes Smalltalk code manipulation capabilities via HTTP endpoints.
+
+1. **Open a Pharo image** (if you don't have one, download from [pharo.org](https://pharo.org/download))
+
+2. **Clone the PharoSmalltalkInteropServer** repository:
+   ```bash
+   git clone https://github.com/bartom21/PharoSmalltalkInteropServer
+   ```
+   > **Credits:** Forked from [mumez/PharoSmalltalkInteropServer](https://github.com/mumez/PharoSmalltalkInteropServer)
+
+3. **Load the server into your Pharo image:**
+   - Open the Pharo Playground
+   - Execute the installation script from the repository's README
+   - Start the HTTP server (typically runs on `http://localhost:8086`)
+
+4. **Verify the server is running:**
+   ```bash
+   curl http://localhost:8086/health
+   ```
+
+---
+
+### Step 2: Set Up the MCP Server
+
+The MCP (Model Context Protocol) server bridges communication between the agentic system and Pharo.
+
+1. **Clone the MCP server** repository:
+   ```bash
+   git clone https://github.com/bartom21/pharo-smalltalk-interop-mcp-server
+   cd pharo-smalltalk-interop-mcp-server
+   ```
+   > **Credits:** Forked from [mumez/pharo-smalltalk-interop-mcp-server](https://github.com/mumez/pharo-smalltalk-interop-mcp-server)
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Configure the MCP server:**
+   - Ensure it points to your Pharo Interop Server (default: `http://localhost:8086`)
+   - Follow configuration instructions in the repository's README
+
+4. **The MCP server will be invoked automatically** by the FastAPI application via stdio communication (no need to run it manually)
+
+---
+
+### Step 3: Install the Pharo Client Menu Extension
+
+The Ailan-Pharo-Client adds a convenient menu option in Pharo to send refactor requests directly from the IDE.
+
+1. **Clone the Ailan-Pharo-Client** repository:
+   ```bash
+   git clone https://github.com/bartom21/Ailan-Pharo-Client
+   ```
+
+2. **Load the packages into your Pharo image:**
+   - Open the Pharo Iceberg tool (Git integration)
+   - Add the cloned repository
+   - Load the packages into your image
+
+3. **Verify installation:**
+   - Right-click on any method in the Pharo System Browser
+   - You should see a new menu option for sending refactor requests to the agent system
+
+---
+
+### Step 4: Set Up and Run the FastAPI Agent Service
+
+This is the core agentic system that orchestrates code review, refactoring, and deployment.
+
+1. **Clone this repository:**
+   ```bash
+   git clone <this-repository-url>
+   cd kaggle-capstone-pharo-agent
+   ```
+
+2. **Install Python dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-3. Create `.env` file:
+3. **Create environment configuration:**
    ```bash
    cp .env.example .env
    ```
 
-4. Edit `.env` and add your Google API key:
-   ```
-   GOOGLE_API_KEY=your_actual_api_key
+4. **Edit `.env` and configure:**
+   ```bash
+   GOOGLE_API_KEY=your_actual_api_key_here
    PHARO_SERVER_URL=http://localhost:8086
    ```
+
+5. **Run the FastAPI server:**
+   ```bash
+   # Development mode with auto-reload
+   uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+   # Or using the convenience script
+   python run.py --dev
+   ```
+
+6. **Verify the API is running:**
+   ```bash
+   curl http://localhost:8000/health
+   ```
+
+   You should see:
+   ```json
+   {
+     "status": "healthy",
+     "version": "1.0.0",
+     "app_name": "Pharo Reviewer Agent API"
+   }
+   ```
+
+7. **Access the API documentation:**
+   - Swagger UI: http://localhost:8000/docs
+   - ReDoc: http://localhost:8000/redoc
+
+---
+
+### Step 5: Test the Complete System
+
+Now everything is connected! Let's test the end-to-end workflow.
+
+#### Option A: Test from Pharo (Recommended)
+
+1. Open the Pharo System Browser
+2. Navigate to any class method
+3. Right-click on the method
+4. Select the refactor option from the Ailan menu
+5. Wait for the agentic system to process
+6. The refactored code will be automatically compiled into your image
+
+#### Option B: Test via API
+
+```bash
+curl -X POST "http://localhost:8000/api/v1/refactor" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "refactor_request": {
+      "class_name": "YourClassName",
+      "method_name": "yourMethodName"
+    }
+  }'
+```
+
+---
+
+### Architecture Overview
+
+Once everything is running, here's how the components interact:
+
+```
+┌─────────────────────┐
+│  Pharo IDE          │
+│  (with Ailan menu)  │
+└──────────┬──────────┘
+           │ HTTP Request
+           ▼
+┌─────────────────────────────┐
+│  FastAPI Agent Service      │
+│  (Multi-agent pipeline)     │
+└──────────┬──────────────────┘
+           │ stdio
+           ▼
+┌─────────────────────────────┐
+│  MCP Server                 │
+│  (Protocol translation)     │
+└──────────┬──────────────────┘
+           │ HTTP
+           ▼
+┌─────────────────────────────┐
+│  Pharo Interop Server       │
+│  (Code manipulation)        │
+└─────────────────────────────┘
+```
+
+---
+
+### Troubleshooting
+
+**Issue: MCP server connection fails**
+- Ensure Pharo Interop Server is running on port 8086
+- Check the MCP server configuration points to the correct URL
+
+**Issue: 503 Service Unavailable**
+- The system processes one request at a time due to stdio limitations
+- Wait for the current request to complete or implement retry logic (see API Usage section)
+
+**Issue: Method not found in Pharo**
+- Verify the class and method names are correct
+- Ensure the method exists in your Pharo image
+
+**Issue: Google API errors**
+- Verify your `GOOGLE_API_KEY` in `.env` is valid
+- Check you haven't exceeded API rate limits
+
+---
 
 ## Running the Application
 
