@@ -16,6 +16,8 @@ I face this issue firsthand as a Smalltalk developer at **JPMorgan Chase**, work
 
 This isn't a niche problem. Countless enterprises still run critical systems on Smalltalk, COBOL, and other legacy platforms. The companies depend on these systems, but the developers maintaining them are starved of the tools that define modern software engineering.
 
+##[Full Pitch Presentation](https://www.canva.com/design/DAG6Ty6aSSE/cto48ZDdru_G9OWIezixIg/edit?utm_content=DAG6Ty6aSSE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
 ### Why the Enterprise Agents Track?
 
 This solution addresses a real enterprise challenge: the productivity gap in large organizations running legacy systems. Enterprise agents enable the complex, multi-step workflows needed to safely refactor mission-critical code—bringing AI capabilities to developers and systems that need them most.
